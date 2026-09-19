@@ -1,0 +1,114 @@
+/**
+ * This ruleset defines the security model for an educational content application.
+ *
+ * Core Philosophy:
+ * The security model is split into three parts:
+ * 1. Public Content: Educational materials (Board Questions, MCQs, Categories, Subjects, Classes, Boards, Groups) are
+ *    publicly readable by any user, including unauthenticated ones.
+ * 2. Admin-Managed Content: Writes to all educational content are restricted to
+ *    users with the 'admin' role. This ensures data integrity and is managed
+ *    through a trusted admin panel.
+ * 3. Private User Data: User profile information is strictly controlled. Users can
+ *    create their own profile and read/update it. Only admins can list or
+ *    delete users.
+ *
+ * Data Structure:
+ * The data is organized into a flat hierarchy for simplicity and performance.
+ * - /users/{userId}: Stores user profiles, including roles.
+ * - /boardQuestions/{boardQuestionId}: Stores public board questions.
+ * - /mcqs/{mcqId}: Stores public multiple-choice questions.
+ * - /educationCategories/{categoryId}: Stores public homepage categories.
+ * - /subjects/{subjectId}: Stores public subjects for the grid view.
+ * - /classes/{classId}: Stores public class names.
+ * - /boards/{boardId}: Stores public board names.
+ * - /groups/{groupId}: Stores public group names.
+ *
+ * Key Security Decisions:
+ * - Public Read-Only Content: All educational collections are world-readable to
+ *   ensure easy access for all app users.
+ * - Admin-Only Writes: All client-side write operations for content are explicitly
+ *   restricted to users with the 'admin' role, checked via the `isUserAdmin()` function.
+ * - Strict User Ownership & Admin Oversight: The '/users/{userId}' path allows users
+ *   to manage their own data, while admins have broader permissions for
+ *   maintenance. User enumeration is disabled for non-admins to prevent data scraping.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function getUserData(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data;
+    }
+    
+    function isUserAdmin(userId) {
+        return isSignedIn() && getUserData(userId).role == 'admin';
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    match /users/{userId} {
+      allow create: if isOwner(userId);
+      allow read, update: if isOwner(userId) || isUserAdmin(request.auth.uid);
+      allow list, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /boardQuestions/{boardQuestionId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /mcqs/{mcqId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /educationCategories/{categoryId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+    
+    match /questionCategories/{categoryId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+    
+    match /subjects/{subjectId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /classes/{classId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /boards/{boardId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /groups/{groupId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+
+    match /textbooks/{textbookId} {
+      allow get, list: if true;
+      allow create, update, delete: if isUserAdmin(request.auth.uid);
+    }
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "entities": {
+    "EducationCategory": {
+      "title": "Education Category",
+      "type": "object",
+      "description": "Represents a category for educational levels like SSC or HSC.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the category (e.g., 'বিজ্ঞান', 'মানবিক')."
+        },
+        "level": {
+          "type": "string",
+          "description": "The educational level (e.g., 'ssc', 'hsc').",
+          "enum": [
+            "ssc",
+            "hsc"
+          ]
+        },
+        "icon": {
+          "type": "string",
+          "description": "The name of the lucide-react icon to display."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description of the category."
+        },
+        "href": {
+          "type": "string",
+          "description": "The link for the category card."
+        }
+      },
+      "required": [
+        "name",
+        "level",
+        "icon",
+        "description",
+        "href"
+      ]
+    },
+    "BoardQuestion": {
+      "title": "BoardQuestion",
+      "type": "object",
+      "description": "Represents a board question.",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "board": {
+          "type": "string"
+        },
+        "year": {
+          "type": "number"
+        },
+        "class": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "chapter": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "guidebookAnswers": {
+          "type": "array",
+          "description": "An array of concise answers, similar to a guide book, for each part of the question (e.g., ক, খ, গ).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "description": "A detailed explanation for the question's answer."
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "A URL to a video explanation."
+        }
+      },
+      "required": [
+        "text",
+        "board",
+        "year",
+        "class",
+        "subject",
+        "chapter",
+        "explanation"
+      ]
+    },
+    "MCQ": {
+      "title": "MCQ",
+      "type": "object",
+      "description": "Represents a multiple-choice question with its options and correct answer.",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "board": {
+          "type": "string"
+        },
+        "year": {
+          "type": "number"
+        },
+        "class": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "chapter": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "correctAnswerIndex": {
+          "type": "number"
+        },
+        "guidebookAnswer": {
+          "type": "string",
+          "description": "A concise answer or rationale, similar to a guide book."
+        },
+        "explanation": {
+          "type": "string",
+          "description": "A detailed explanation for the question's answer."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "A URL to a video explanation."
+        }
+      },
+      "required": [
+        "text",
+        "board",
+        "year",
+        "class",
+        "subject",
+        "chapter",
+        "options",
+        "correctAnswerIndex",
+        "explanation"
+      ]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "A user's public profile information.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "The user's role for authorization.",
+          "enum": [
+            "admin",
+            "student"
+          ]
+        }
+      },
+      "required": [
+        "displayName",
+        "role"
+      ]
+    },
+    "Subject": {
+      "title": "Subject",
+      "type": "object",
+      "description": "Represents a subject with its details.",
+      "properties": {
+        "subjectName": {
+          "type": "string",
+          "description": "The name of the subject in Bengali."
+        },
+        "class": {
+          "type": "string",
+          "description": "The educational class level (e.g., 'SSC', 'HSC')."
+        },
+        "group": {
+          "type": "string",
+          "description": "The educational group (e.g., 'Science', 'Arts')."
+        },
+        "chapters": {
+          "type": "array",
+          "description": "List of chapters in the subject.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        },
+        "icon": {
+          "type": "string",
+          "description": "The name of the lucide-react icon to display."
+        },
+        "isFree": {
+          "type": "boolean",
+          "description": "Whether the subject content is free."
+        }
+      },
+      "required": [
+        "subjectName",
+        "class",
+        "group",
+        "chapters",
+        "icon",
+        "isFree"
+      ]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "An educational class level (e.g., SSC, HSC).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the class."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Board": {
+      "title": "Board",
+      "description": "An educational board (e.g., Dhaka, Cumilla).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the board."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "An educational group (e.g., Science, Arts).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the group."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "/educationCategories/{categoryId}": {
+      "schema": {
+        "$ref": "#/entities/EducationCategory"
+      },
+      "description": "Stores educational categories for the homepage."
+    },
+    "/boardQuestions/{boardQuestionId}": {
+      "schema": {
+        "$ref": "#/entities/BoardQuestion"
+      },
+      "description": "Stores board questions."
+    },
+    "/mcqs/{mcqId}": {
+      "schema": {
+        "$ref": "#/entities/MCQ"
+      },
+      "description": "Stores multiple-choice questions."
+    },
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Stores user profiles."
+    },
+    "/subjects/{subjectId}": {
+      "schema": {
+        "$ref": "#/entities/Subject"
+      },
+      "description": "Stores subjects for the subject selection grid."
+    },
+    "/classes/{classId}": {
+      "schema": {
+        "$ref": "#/entities/Class"
+      },
+      "description": "Stores educational class levels."
+    },
+    "/boards/{boardId}": {
+      "schema": {
+        "$ref": "#/entities/Board"
+      },
+      "description": "Stores educational boards."
+    },
+    "/groups/{groupId}": {
+      "schema": {
+        "$ref": "#/entities/Group"
+      },
+      "description": "Stores educational groups."
+    }
+  }
+}
