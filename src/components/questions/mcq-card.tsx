@@ -474,87 +474,102 @@ export function McqCard({
         </div>
       ) : (
         isAnswered && !testMode && (
-          <div className="px-5 pb-5">
-            <div className="sub-question-item">
-              <button
-                className="sub-question-trigger"
-                onClick={() => setShowExplanation(!showExplanation)}
-              >
-                <span className="sub-question-badge">
-                  <Sparkles className="h-3.5 w-3.5" />
-                </span>
-                <span className="flex-1 text-sm font-medium text-foreground/80">📖 উত্তর ও ব্যাখ্যা দেখুন</span>
-                <ChevronDown className={`h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300 ${showExplanation ? 'rotate-180' : ''}`} />
-              </button>
-              {showExplanation && (
-                <div className="px-4 pb-4 pt-1 animate-slide-in-up">
-                  <Tabs defaultValue="answer" className="w-full">
-                    <TabsList className="bg-muted/50 rounded-xl p-1">
-                      <TabsTrigger value="answer" className="rounded-lg text-xs">সঠিক উত্তর</TabsTrigger>
-                      {mcq.explanation && <TabsTrigger value="explanation" className="rounded-lg text-xs">ধাপে ধাপে</TabsTrigger>}
-                      {mcq.guidebookAnswer && <TabsTrigger value="guidebook" className="rounded-lg text-xs">গাইড উত্তর</TabsTrigger>}
-                      {mcq.videoUrl && <TabsTrigger value="video" className="rounded-lg text-xs">ভিডিও</TabsTrigger>}
-                    </TabsList>
-                    <TabsContent value="answer" className="pt-3">
-                      <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-4 text-green-300">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-green-400/80 mb-2">সঠিক উত্তর</p>
-                        <div className="flex items-start gap-3">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-green-500/40 bg-green-500/15 text-sm font-bold">
-                            {String.fromCharCode(0x0995 + correctAnswerIndex)}
-                          </span>
-                          <div className="flex-1 text-sm leading-relaxed text-foreground">
-                            <MathRenderer content={mcq.options[correctAnswerIndex] || ''} inline />
-                          </div>
-                        </div>
-                      </div>
-                    </TabsContent>
+          <div className="px-3 sm:px-5 pb-3 sm:pb-5 w-full">
+            <button
+              className="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/15 border border-primary/25 text-foreground transition-all"
+              onClick={() => setShowExplanation(!showExplanation)}
+            >
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-primary">
+                <Sparkles className="h-4 w-4 shrink-0" />
+                <span>📖 উত্তর ও সমাধান পদ্ধতি দেখুন</span>
+              </div>
+              <ChevronDown className={`h-4 w-4 text-primary shrink-0 transition-transform duration-300 ${showExplanation ? 'rotate-180' : ''}`} />
+            </button>
+
+            {showExplanation && (
+              <div className="mt-2.5 w-full animate-slide-in-up space-y-2.5">
+                <Tabs defaultValue={mcq.explanation ? "explanation" : "answer"} className="w-full">
+                  <TabsList className="w-full sm:w-auto grid grid-cols-2 sm:inline-flex h-auto p-1 bg-muted/60 rounded-xl gap-1">
+                    <TabsTrigger value="answer" className="rounded-lg text-xs py-1.5 font-bold">
+                      সঠিক উত্তর
+                    </TabsTrigger>
                     {mcq.explanation && (
-                      <TabsContent value="explanation" className="pt-3 space-y-4">
-                        <div className="rounded-xl border-0 glass-panel p-4 pb-5 shadow-lg relative overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
-                          <div className="glass-panel border border-primary/40 px-4 py-2 text-primary font-bold mb-4 inline-flex items-center gap-2 shadow-[0_4px_20px_rgba(var(--primary)/0.25)] rounded-xl relative z-10">
-                            <Sparkles className="h-4 w-4 animate-pulse" />
-                            সমাধান পদ্ধতি
-                          </div>
-                          {onAskAI ? (
-                            <SelectableExplanation content={mcq.explanation} onAskAI={handleAskAI} />
-                          ) : (
-                            <MathRenderer content={mcq.explanation} />
-                          )}
-                        </div>
-                      </TabsContent>
+                      <TabsTrigger value="explanation" className="rounded-lg text-xs py-1.5 font-bold">
+                        ধাপে ধাপে
+                      </TabsTrigger>
                     )}
                     {mcq.guidebookAnswer && (
-                      <TabsContent value="guidebook" className="pt-3 space-y-4">
-                        <div className="rounded-xl border-0 glass-panel p-4 pb-5 shadow-lg relative overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent pointer-events-none" />
-                          <div className="glass-panel border border-accent/40 px-4 py-2 text-accent font-bold mb-4 inline-flex items-center gap-2 shadow-[0_4px_20px_rgba(var(--accent)/0.25)] rounded-xl relative z-10 w-fit">
-                            <Sparkles className="h-4 w-4 animate-pulse" />
-                            গাইড উত্তর
-                          </div>
-                          {onAskAI ? (
-                            <SelectableExplanation content={mcq.guidebookAnswer} onAskAI={handleAskAI} />
-                          ) : (
-                            <MathRenderer content={mcq.guidebookAnswer} />
-                          )}
-                        </div>
-                      </TabsContent>
+                      <TabsTrigger value="guidebook" className="rounded-lg text-xs py-1.5 font-bold">
+                        গাইড উত্তর
+                      </TabsTrigger>
                     )}
                     {mcq.videoUrl && (
-                      <TabsContent value="video">
-                        <iframe
-                          className="w-full aspect-video rounded-xl mt-2"
-                          src={getYouTubeEmbedUrl(mcq.videoUrl)}
-                          title="Video explanation"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
-                      </TabsContent>
+                      <TabsTrigger value="video" className="rounded-lg text-xs py-1.5 font-bold">
+                        ভিডিও
+                      </TabsTrigger>
                     )}
-                  </Tabs>
-                </div>
-              )}
-            </div>
+                  </TabsList>
+
+                  <TabsContent value="answer" className="pt-2 w-full focus-visible:outline-none">
+                    <div className="w-full rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 sm:p-4 text-emerald-300">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400 mb-1.5">সঠিক উত্তর</p>
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-emerald-500/40 bg-emerald-500/20 text-sm font-bold text-emerald-400">
+                          {String.fromCharCode(0x0995 + correctAnswerIndex)}
+                        </span>
+                        <div className="flex-1 text-sm sm:text-base leading-relaxed text-foreground">
+                          <MathRenderer content={mcq.options[correctAnswerIndex] || ''} inline />
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {mcq.explanation && (
+                    <TabsContent value="explanation" className="pt-2 w-full focus-visible:outline-none">
+                      <div className="w-full rounded-xl border border-primary/25 bg-card/90 p-3 sm:p-5 shadow-sm text-foreground text-sm sm:text-base leading-relaxed overflow-x-auto">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-3">
+                          <Sparkles className="h-3.5 w-3.5 animate-pulse" />
+                          সমাধান পদ্ধতি
+                        </div>
+                        {onAskAI ? (
+                          <SelectableExplanation content={mcq.explanation} onAskAI={handleAskAI} />
+                        ) : (
+                          <MathRenderer content={mcq.explanation} />
+                        )}
+                      </div>
+                    </TabsContent>
+                  )}
+
+                  {mcq.guidebookAnswer && (
+                    <TabsContent value="guidebook" className="pt-2 w-full focus-visible:outline-none">
+                      <div className="w-full rounded-xl border border-accent/25 bg-card/90 p-3 sm:p-5 shadow-sm text-foreground text-sm sm:text-base leading-relaxed overflow-x-auto">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-accent/10 border border-accent/20 text-accent text-xs font-bold mb-3">
+                          <Sparkles className="h-3.5 w-3.5 animate-pulse" />
+                          গাইড উত্তর
+                        </div>
+                        {onAskAI ? (
+                          <SelectableExplanation content={mcq.guidebookAnswer} onAskAI={handleAskAI} />
+                        ) : (
+                          <MathRenderer content={mcq.guidebookAnswer} />
+                        )}
+                      </div>
+                    </TabsContent>
+                  )}
+
+                  {mcq.videoUrl && (
+                    <TabsContent value="video" className="pt-2 w-full focus-visible:outline-none">
+                      <div className="w-full rounded-xl border border-border/70 overflow-hidden bg-black/40">
+                        <iframe
+                          src={getYouTubeEmbedUrl(mcq.videoUrl)}
+                          className="w-full aspect-video"
+                          allowFullScreen
+                        />
+                      </div>
+                    </TabsContent>
+                  )}
+                </Tabs>
+              </div>
+            )}
           </div>
         )
       )}

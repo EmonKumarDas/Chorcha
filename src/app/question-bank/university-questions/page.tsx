@@ -643,7 +643,7 @@ function UniversityQuestionsWizard() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-5xl w-full">
         {/* VIEW 1: SELECT UNIVERSITY */}
         {!university && (
           <div className="animate-fade-in space-y-8">
